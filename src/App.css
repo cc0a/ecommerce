@@ -34,8 +34,8 @@ body {
   outline: 2px solid var(--primaryColor);
   outline-offset: 4px;
   border: none;
+  transition: var(--mainTransition);
 }
-
 .main-link:hover {
   background: var(--darkGrey);
   text-decoration: none;
