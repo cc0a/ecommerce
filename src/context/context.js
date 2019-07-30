@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { linkData } from "./linkData";
 import { socialData } from "./socialData";
-import { items } from "./productData";
+// import { items } from "./productData";
+import { client } from "./contentful";
 const ProductContext = React.createContext();
 //Provider
 //Consumer
@@ -15,7 +16,7 @@ class ProductProvider extends Component {
     cartItems: 0,
     cartSubTotal: 0,
     cartTax: 0,
-    carTotal: 0,
+    cartTotal: 0,
     storeProducts: [],
     filteredProducts: [],
     featuredProducts: [],
@@ -31,7 +32,13 @@ class ProductProvider extends Component {
   componentDidMount() {
     //from contentful items
 
-    this.setProducts(items);
+    // this.setProducts(items);
+    client
+      .getEntries({
+        content_type: "techStoreProducts"
+      })
+      .then(response => this.setProducts(response.items))
+      .catch(console.error);
   }
 
   //set products
@@ -104,11 +111,13 @@ class ProductProvider extends Component {
   //add totals
   addTotals = () => {
     const totals = this.getTotals();
-    this.setState({
-      cartItems: totals.cartItems,
-      cartSubTotal: totals.subTotal,
-      cartTax: totals.tax,
-      cartTotal: totals.total
+    this.setState(() => {
+      return {
+        cartItems: totals.cartItems,
+        cartSubTotal: totals.subTotal,
+        cartTax: totals.tax,
+        cartTotal: totals.total
+      };
     });
   };
   // sync storage
